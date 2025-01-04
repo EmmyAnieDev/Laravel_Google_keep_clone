@@ -6,7 +6,7 @@
         <form action="{{ route('notes.store') }}" method="POST" class="create-note">
             @csrf
             <input type="text" placeholder="Title" name="title">
-            <textarea rows="4" placeholder="Note" id="editorjs" name="title"></textarea>
+            <textarea rows="4" placeholder="Note" id="editorjs" name="content"></textarea>
         </form>
         <div class="ions_area">
             <ul>

@@ -50,7 +50,9 @@ $(function () {
         event.stopPropagation();
     });
     $(".single_note_content").on("click", function (event) {
-        openModal();
+        let modelId = $(this).attr('data-modal');
+        console.log(modelId);
+        $(`.custom_modal_area[data-modal="${modelId}"]`).addClass("show_modal");
         event.stopPropagation();
     });
     $(".cancel_modal").on("click", function (event) {

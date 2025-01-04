@@ -61,7 +61,14 @@ class NoteController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $note = Note::findOrFail($id);
+
+        $note->update([
+            'title' => $request->title,
+            'content' => $request->content
+        ]);
+
+        return redirect()->back();
     }
 
     /**
