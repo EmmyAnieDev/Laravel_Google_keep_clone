@@ -78,4 +78,17 @@ class NoteController extends Controller
     {
         //
     }
+
+    public function changeAppearance(Request $request)
+    {
+        $notes = Note::where('user_id', Auth::id())->where('id', $request->id)->first();
+
+        $notes->update([
+            'color_name' => $request->color,
+            'appearance_type' => $request->type,
+        ]);
+
+        return response()->json(['message' => 'success', 'status' => true]);
+    }
+
 }

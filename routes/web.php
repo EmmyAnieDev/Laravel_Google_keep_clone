@@ -15,6 +15,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('/notes', NoteController::class);
     Route::get('/dashboard', [NoteController::class, 'index'])->name('dashboard');
+    Route::post('/notes/appearance', [NoteController::class, 'changeAppearance'])->name('notes.appearance');
+
 });
 
 require __DIR__.'/auth.php';
