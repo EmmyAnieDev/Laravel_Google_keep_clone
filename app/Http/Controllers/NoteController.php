@@ -13,7 +13,7 @@ class NoteController extends Controller
      */
     public function index()
     {
-        $notes = Note::where('user_id', Auth::id())->latest()->get();
+        $notes = Note::where('user_id', Auth::id())->where('archived', 0)->latest()->get();
 
         return view('dashboard', compact('notes'));
     }
@@ -90,6 +90,26 @@ class NoteController extends Controller
         ]);
 
         return response()->json(['message' => 'success', 'status' => true]);
+    }
+
+    public function archived()
+    {
+        $notes = Note::where('user_id', Auth::id())->where('archived', 1)->latest()->get();
+
+        return view('archived', compact('notes'));
+    }
+
+    public function toogleArchive($id)
+    {
+        $note = Note::where('user_id', Auth::id())->where('id', $id)->first();
+
+        if ($note) {
+            $note->update([
+                'archived' => !$note->archived, // Toggles between 1 and 0
+            ]);
+        }
+
+        return redirect()->back();
     }
 
 }
