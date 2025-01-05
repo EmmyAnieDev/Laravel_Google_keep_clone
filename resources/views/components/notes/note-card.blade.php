@@ -38,12 +38,16 @@
                     <li>
                         <a class="modal_drop_list"><i class="far fa-ellipsis-v"></i></a>
                         <ul class="drop_list">
-                            <li><a href="#">delete note</a></li>
-                            <li><a href="#">add label</a></li>
-                            <li><a href="#">add drawing</a></li>
-                            <li><a href="#">make a copy</a></li>
-                            <li><a href="#">vision history</a></li>
+                            @if( $bin == true )
+                                <li><a href=" {{ route('notes.restore', $note->id) }}">restore note</a></li>
+                            @endif
+                            <li><a href="javascript:;" onclick="$('.delete-note-{{ $note->id }}').submit()">delete note</a></li>
                         </ul>
+                        <form class="delete-note-{{ $note->id }}" action="{{ route('notes.destroy', $note->id) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <input type="hidden" name="permanent_delete" value="{{ $bin ? 1 : 0 }}">
+                        </form>
                     </li>
                 </ul>
                 <!-- <a class="cancel_modal" href="#">cancel</a> -->
@@ -88,16 +92,6 @@
                     </li>
                     <li>
                         <a href="#"><i class="far fa-box-alt"></i></a>
-                    </li>
-                    <li>
-                        <a class="modal_drop_list"><i class="far fa-ellipsis-v"></i></a>
-                        <ul class="drop_list">
-                            <li><a href="#">delete note</a></li>
-                            <li><a href="#">add label</a></li>
-                            <li><a href="#">add drawing</a></li>
-                            <li><a href="#">make a copy</a></li>
-                            <li><a href="#">vision history</a></li>
-                        </ul>
                     </li>
                 </ul>
                 <a class="" href="javascript:;" onclick="$('.update-note-{{ $note->id }}').submit()">Update</a>

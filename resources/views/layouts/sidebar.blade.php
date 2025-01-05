@@ -21,7 +21,7 @@
             </a>
         </li>
         <li>
-            <a class="{{ request()->routeIs('bin.route.name') ? 'active' : '' }}" href="#">
+            <a class="{{ request()->routeIs('notes.bin') ? 'active' : '' }}" href="{{ route('notes.bin') }}">
                 <i class="far fa-trash-alt"></i> <span>Bin</span>
             </a>
         </li>

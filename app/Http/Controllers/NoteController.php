@@ -74,9 +74,18 @@ class NoteController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request, string $id)
     {
-        //
+        // Retrieve a note, including soft-deleted (trashed) ones, by its ID
+        $note = Note::withTrashed()->findOrFail($id);
+
+        if ($request->permanent_delete == 0){
+            $note->delete();
+        }else{
+            $note->forceDelete();
+        }
+
+        return redirect()->back();
     }
 
     public function changeAppearance(Request $request)
@@ -108,6 +117,22 @@ class NoteController extends Controller
                 'archived' => !$note->archived, // Toggles between 1 and 0
             ]);
         }
+
+        return redirect()->back();
+    }
+
+    public function bin()
+    {
+        $notes = Note::where('user_id', Auth::id())->onlyTrashed()->latest('deleted_at')->get();
+
+        return view('bin', compact('notes'));
+    }
+
+    public function restore(string $id)
+    {
+        $note = Note::where('user_id', Auth::id())->onlyTrashed()->findOrFail($id);
+
+        $note->restore();
 
         return redirect()->back();
     }

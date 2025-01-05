@@ -17,6 +17,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/notes/appearance', [NoteController::class, 'changeAppearance'])->name('notes.appearance');
     Route::get('/notes/archived', [NoteController::class, 'archived'])->name('notes.archived');
     Route::get('/notes/archive/{id}', [NoteController::class, 'toogleArchive'])->name('notes.archive');
+    Route::get('/notes/bin', [NoteController::class, 'bin'])->name('notes.bin');
+    Route::get('/notes/restore/{id}', [NoteController::class, 'restore'])->name('notes.restore');
+    Route::get('/notes/permanent-delete/{id}', [NoteController::class, 'forceDestroy'])->name('notes.permanent-delete');
     Route::resource('/notes', NoteController::class);
 
 });
