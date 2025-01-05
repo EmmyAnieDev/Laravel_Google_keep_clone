@@ -11,9 +11,14 @@ class NoteController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $notes = Note::where('user_id', Auth::id())->where('archived', 0)->latest()->get();
+        $notes = Note::where('user_id', Auth::id())->where('archived', 0)
+            ->when($request->has('search') && $request->filled('search'), function ($query) {
+                $search = request('search');
+                $query->where('title', 'LIKE', "%$search%")->orWhere('content', 'LIKE', "%$search%");
+            })
+            ->latest()->get();
 
         return view('dashboard', compact('notes'));
     }
@@ -101,9 +106,16 @@ class NoteController extends Controller
         return response()->json(['message' => 'success', 'status' => true]);
     }
 
-    public function archived()
+    public function archived(Request $request)
     {
-        $notes = Note::where('user_id', Auth::id())->where('archived', 1)->latest()->get();
+        $notes = Note::where('user_id', Auth::id())->where('archived', 1)
+            ->when($request->has('search') && $request->filled('search'), function ($query) {
+                $search = request('search');
+                $query->where(function ($q) use ($search) {
+                    $q->where('title', 'LIKE', "%$search%")->orWhere('content', 'LIKE', "%$search%");
+                });
+            })
+            ->latest()->get();
 
         return view('archived', compact('notes'));
     }
@@ -121,9 +133,16 @@ class NoteController extends Controller
         return redirect()->back();
     }
 
-    public function bin()
+    public function bin(Request $request)
     {
-        $notes = Note::where('user_id', Auth::id())->onlyTrashed()->latest('deleted_at')->get();
+        $notes = Note::where('user_id', Auth::id())
+            ->when($request->has('search') && $request->filled('search'), function ($query) {
+                $search = request('search');
+                $query->where(function ($q) use ($search) {
+                    $q->where('title', 'LIKE', "%$search%")->orWhere('content', 'LIKE', "%$search%");
+                });
+            })
+            ->onlyTrashed()->latest('deleted_at')->get();
 
         return view('bin', compact('notes'));
     }
